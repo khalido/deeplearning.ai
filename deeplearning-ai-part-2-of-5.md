@@ -87,3 +87,42 @@ Deep NN suffer from vanishing and exploding gradients
 - this happens when gradients become very small or big
 - in a deep NN if activations are linear, than the activations and derivates will increase exponentially with layers
 
+Weight Initialization for Deep Networks
+
+- this is a paritial solution to vanishing/exploding gradients
+- initialize the weights with a variance equal to 1/n - where n is the number of input features - sure weights are not too small or not to large
+
+Numerical approximation of gradients
+
+Gradient Checking
+
+- check our gradient computation functions - this helps debug backprop
+-
+
+## Week 2
+
+Mini-batch gradient descent
+
+- training big data is slow - breaking it up into smaller batches speeds things up
+- vectorization allows us to put our entire data set of m examples into a huge matrix and process it all in one go
+- but this way we have to process the entire set before our gradient descent can make a small step in the right direction
+- training on mini batches allows gradient descent to work much faster, as in one iteration over the dataset we would have taken m / batch_size gradient descent steps
+  - makes the leaning more 'noisy' since each mini-batch is new data (compared to going over the entire dataset)
+- a typical mini-batch size is 64, 128, 256, 512
+  - should be a power of 2 as thats how computer memory is setup
+  - make sure the batch fits inside cpu/gpu memory
+-
+
+Exponentially weighted averages
+
+-
+
+Gradient descent with momentum
+
+RMSprop
+
+Adam optimization algorithinm
+
+Learning rate decay
+
+The problem of local optima
