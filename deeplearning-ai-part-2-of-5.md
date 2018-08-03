@@ -99,7 +99,7 @@ Gradient Checking
 - check our gradient computation functions - this helps debug backprop
 -
 
-## Week 2
+## Week 2:Optimizatoni algorithims
 
 Mini-batch gradient descent
 
@@ -115,14 +115,60 @@ Mini-batch gradient descent
 
 Exponentially weighted averages
 
--
+- also called exponentially weighted moving averages in statistics
+- this decreases the weight of older data exponentially, enhancing the effect of more recent numbers which makes it easy to spot new trends. Of course the parameters can be tweaked, like changing beta depending on how many data points to average`(1 / (1 - beta))`.
+- key component of several optimization algos
+
+```V(t) = beta * v(t-1) + (1-beta) * theta(t)```
+
+bias correction in exponentially weighted averages:
+
+- the moving avg in the beginning is low since there isn't past data to refer from and it starts from zero.
+- so add a bias term, dividing the above equation by `(1 - beta^t)`:
+
+```v(t) = (beta * v(t-1) + (1-beta) * theta(t)) / (1 - beta^t)```
 
 Gradient descent with momentum
 
-RMSprop
+- modify gradient descent so on each iteration compute the exponential weighted averages of the gradients and update weights
+- this takes us faster to the min point, and dampens out oscillations
+- most common value of beta is `0.9`. generally we don't bother with bias correction since we do so many iterations
+- [this explains why momentum works](https://towardsdatascience.com/stochastic-gradient-descent-with-momentum-a84097641a5d):
 
-Adam optimization algorithinm
+> With Stochastic Gradient Descent we don’t compute the exact derivate of our loss function. Instead, we’re estimating it on a small batch. Which means we’re not always going in the optimal direction, because our derivatives are ‘noisy’. Just like in my graphs above. So, exponentially weighed averages can provide us a better estimate which is closer to the actual derivate than our noisy calculations.
+
+- also see [Nesterov Momentum](http://cs231n.github.io/neural-networks-3/#sgd)
+
+RMSprop or Root mean square prop
+
+- we want learning to go fast horizontally and slower vertically - so we divide updates in the vertical direction by a large number and updates in the horizontal direction by a much smaller number
+- this dampens oscillations, so we can use a faster learning rate
+- first proposed in Hinton's coursera course
+
+Adam optimization algorithim
+
+- mashes together momemtum and RMSprop, works very well
+- parameters:
+  - learning rate alpha
+  - beta1: moving avg or momemtum parameter, same as 0.9 above
+  - beta2: RMSprop, `0.999` works well
+  - epsilon `10^8` - less important, can leave it at default
+  - generally leave values at default, just try out different learning rates
 
 Learning rate decay
 
+- slowly decrease learning rate over epochs
+- this makes intuitive sense as in the beginning bigger steps are ok and as the NN starts converging, we need smaller steps
+- other methods: exponential decay, discrete steps, etc
+- manual decay - watch the model as it trains, pause and manually change the learning rate - works if running a small number of models which take a long time to train
+- this is lower down on the list of things to try when tuning
+
 The problem of local optima
+
+- people used to worry a lot about NN getting in local optima, but in multi-dimensional space most points of zero gradient are saddle points so its very unlikely to get stuck in a local optima
+- a lot of our intuitions about low dimensional spaces don't transfer over the high dimensional space practically all NN's use - i.e if we have 20K parameters, the NN is operating in a 20K dimensional space
+- but plateaus can slow down learning, so techniques like momentum, Adam help here
+
+## Week 3: Hyperparameter tuning, Batch Normalization and Programming Frameworks
+
+Hyperparameter tuning
