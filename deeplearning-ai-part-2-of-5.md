@@ -171,4 +171,98 @@ The problem of local optima
 
 ## Week 3: Hyperparameter tuning, Batch Normalization and Programming Frameworks
 
-Hyperparameter tuning
+### Hyperparameter tuning
+
+The Tuning Process
+
+- there are tons of hyperparameters to tune, but some are more important than others
+- **alpha** or the learning rate is the most important parameter most the time
+- then the second  most important:
+  - **momentum** (0.9 being a good default,
+  - **mini-batch size**
+  - **hidden units**
+- third in important:
+  - num of layers
+  -learning rate decay
+- when using Adam, you pretty much never have to tune beta1, beta2 and epsilon
+- of course, this depends on the NN, dataset etc
+- don't use a grid of one val vs the other - this works when you have a small number of hyperparameters, but in Deep Learning choose hyperparameter combinations at random
+- use coarse to fine sampling - find the range where a parameter is working, then do finer grained sampling to get the best val
+
+Using an appropriate scale to pick hyperparameters
+
+- pick the appropriate scale for hyperparameters, generally better to use log scale rather than linear
+
+Hyperparameters tuning in practice: Pandas vs. Caviar
+
+- intuitions about hyperparameters often don't transfer to other domains e.g logistcs, nlpo, vision, speech will all have different best parameters
+- two major ways to find the best parameters:
+  - **babysit one model** - as its training, tweak the parameters and see how its doing on metrics. This is helpful when we don't have enough computation capcity (panda approach)
+  - **train many models in parallel** - run many models in parallel, with different parameters (caviar approach)
+
+### Batch Norm
+
+Normalizing activations in a network
+
+- instead of just normalizing the inputs to a NN, we also normalize the outputs of each layer of a NN - this is called batch norm.
+- using the standard `(intermediate val - mean) / (std dev + epsilon)`. Epsilon is needed for numerical stability if variance is zero
+- batch norm sets the hidden layer to have mean 0 and variance 1, but sometimes we might want it to have a different distribution, so we can add a parameter beta to the hidden units to change the shape of the distribution. (like we might want a larger variance to take advantage of the nonlinearity of the sigmoid function).
+- batch norm makes the NN more robust and speeds up learning
+- while batch norm can be applied before or after the activation function, in practice it is generally applied before the activation funciton.
+
+Fitting Batch Normalization into a neural network
+
+- Deep learning frameworks have batch norm built in, like [tensorflow](https://www.tensorflow.org/api_docs/python/tf/nn/batch_normalization), [keras](https://keras.io/layers/normalization/) etc.
+- implementing this ourself is straightforward, as we add in a norm step just before applying the activation function at each layer in the NN.
+- In each mini-batch, for each hidden layer compute the mean and the variance in that mini-batch, normalize, then apply the activation function as before.
+
+Why does Batch normalization work?
+
+Three main reaons:
+
+- 1: normalizing input features speeds up learning, so one intuition is that this is doing a similar thing for each hidden layer
+- 2: makes weights in deeper layers more robust to changes in weights in earlier layers
+  - for example, we train a network on black cats, and we try to classify a coloured cat. Every input is shifted, but the decision boundaries haven't changed. This has a fancy name, coviariate shift.
+  - allows each layer to learn more independently
+- 3: regularization of hidden units
+  - adds some noise to each mini-batch, as each one is regularized on its own mean/variance, which has a slight regularization effect (bigger batches reduce noise/regularization)
+  - but don't rely on batch norm for regularization, as its just a unintended side effect, use other techniques like L2 or dropout
+
+  
+Batch normalization at test time
+
+- we often predict one example at a time at test time, so the idea of a mean/variance doesn't apply - we no longer have a mini-batch to process
+- we calculate the exponentially weighted average across all the mini-batches and use that to get a mean/variance to apply at test time on the one test example
+
+### Multi-class Classification
+
+Softmax regresssion
+
+- is generalization of logistic regression which can predict multiple classes rather than just a binary.
+
+Training a Softmax classifier
+
+- a hard max would look at a vector and put 1 for the max and zero for everything else
+- soft max takes in a vector and puts in a probability for each value such that they all sum up to 1
+- loss function is trying to make the probablity of the "right" class as high as possible
+
+### Intro to programming frameworks
+
+Deep learning frameworks
+
+- implementing a basic NN libary is a great learning framework
+- as we implemnt complex/large models its not practical implement everything from scratch - there are many good frameworks to choose from
+- the DL frameworks not only speed up coding but implement many optimizations
+- choose one by looking at programning ease, running speed and how open it is
+- my own research has led my to tensorflow/keras or pytorch
+
+[Tensorflow](https://www.tensorflow.org/)
+
+- covers the very basics of tensorflow, though the [tensorflow guide is better](https://www.tensorflow.org/tutorials/).
+- we implement forward prop, tf automatically does the backprop
+- a tf program looks like:
+  - make tensors
+  - write operations to those tensors
+  - initialize tensors
+  - create and run a Session
+- tf.placeholder is a variable to which we assign a value later
