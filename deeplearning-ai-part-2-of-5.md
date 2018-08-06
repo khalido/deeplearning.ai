@@ -1,8 +1,8 @@
 ---
 title: "deeplearning.ai: Improving Deep Neural Networks"
-date: 2018-07-12
+date: 2018-08-05
+cover: /img/deeplearningai-2-of-5-cert.png
 tags:
-- python
 - courses
 - deep learning
 ---
@@ -227,7 +227,6 @@ Three main reaons:
 - 3: regularization of hidden units
   - adds some noise to each mini-batch, as each one is regularized on its own mean/variance, which has a slight regularization effect (bigger batches reduce noise/regularization)
   - but don't rely on batch norm for regularization, as its just a unintended side effect, use other techniques like L2 or dropout
-
   
 Batch normalization at test time
 
@@ -266,3 +265,8 @@ Deep learning frameworks
   - initialize tensors
   - create and run a Session
 - tf.placeholder is a variable to which we assign a value later
+
+### [Yuanqing Lin](https://twitter.com/yuanqinglin) interview
+
+- heads China's National Deep Learning Research Lab
+- building a really large deep learning platform
