@@ -7,7 +7,7 @@ tags:
 - deep learning
 ---
 
-This course covers how to think about and improve machine leaning systems.
+This course covers how to think about and improve machine learning systems.
 
 > You will learn how to build a successful machine learning project. If you aspire to be a technical leader in AI, and know how to set direction for your team's work, this course will show you how.
 
@@ -20,13 +20,13 @@ This course covers how to think about and improve machine leaning systems.
 
 ## Week 1: ML Strategy
 
-There are lots of ways to improve a DL system, so its important to sse quick and effective ways to figure out the most promising things to try and and improve.
+There are lots of ways to improve a deep learning system, so its important to sse quick and effective ways to figure out the most promising things to try and and improve.
 
 ### Orthogonalization
 
 - old school tv's had a number of knobs to tune the picture - all the settings made it very hard to get the picture perfect
-- cars have orthogonal controls - a steering and speed which effect two different things making it easier to control. If we have controls which effected both steering and speed at the same time it would make it much harder to get a speed and steering angle we wanted.
-- we have a chain of assumptions in ML: fit training set well on cost func, fit dev set, fit test set, then perform well in the real world and we want to have different set of knobs to tune each part.
+- cars have orthogonal controls - a steering and speed which effect two different things making it easier to control. If we have controls which effect the steering and speed at the same time it would make it much harder to get the speed and steering angle we wanted.
+- we have a chain of assumptions in ML: fit training set on cost func, fit dev set, fit test set, then perform well in the real world and we want to have different set of knobs to tune each part.
 - ideally we have a number of controls which do one task well without effecting other things too much. 
 - of course, some controls apply across many layers and are still useful, like early stopping
 
@@ -35,8 +35,8 @@ There are lots of ways to improve a DL system, so its important to sse quick and
 #### Single number evaluation metric
 
 - set up a single real number to evaluate performance before starting out on a project
-- a well defined dev set and a single metric speeds up the iterative process of devloping a good model
-- looking at a simple cat classifier
+- a well defined dev set and a single metric speeds up the iterative process of developing a good model
+- looking at a simple cat classifier:
 
 | Classifier | Precision | Recall |
 | ---------- | --------- | ------ |
@@ -55,41 +55,41 @@ There are lots of ways to improve a DL system, so its important to sse quick and
 - its not easy to setup a single number - we might narrow things down to a single number, accuracy, but also want to evaluate running time
 - solve this by picking one metric to optimize, and satisfy the other metric by picking a threshold, like all running times below 1000ms are good enough.
     - for voice recognition, like on Amazon Alexa, we have metrics for how long humans are ok to wait, so we can just use that number as a threshold
-- - so, we have a make metric to optimize, and any number of other metrics which we satisfy with thresholds. 
+- so, we have a make metric to optimize, and any number of other metrics which we satisfy with thresholds. 
  
  #### Train/dev/test distributions
 
  - dev (cross validation set) and test (the final holdout data) sets have to come from the same distribution.
  - for example, if we have data from different regions, don't say us/uk/europe is the dev set and asia is the test set - regions will have differences.
- - an ML team wasted time optimizing loan approvals on medium income zip codes, but was testing on low income zip codes
- - choose a dev and test set to reflect data you expect to get in the future and consider important to do well on
+ - an ML team wasted time optimizing loan approvals on medium income zip codes, but was testing on low income zip codes.
+ - choose a dev and test set to reflect data you expect to get in the future and consider important to do well on.
 
 #### Size of the dev and test sets
 
-- old rule of thumb for train/dev/test: 60/20/20 - worked for smaller data
+- old rule of thumb for train/dev/test: 60/20/20 - worked for smaller data.
 - but now we have much larger data sets, so for 1M data set, 1% or 10K might be enough for a test set.
 - deep learning is data hungry so we want to feed it as much data as possible for training
 - the test set helps us evaluate the overall system, so it has to be big enough to give us high confidence.
-    - this will vary depending on the data set
-    - sometimes we might not need a test set at all
+    - this will vary depending on the data set.
+    - sometimes we might not need a test set at all.
 
 #### When to change dev/test sets and metrics
 
-- say we've built two cat classifiers, A has 3% error, B has 5% error
+- say we've built two cat classifiers, A has 3% error, B has 5% error.
 - A is better, but lets through porn images. B stops all the porn images, so even though it has higher error, B is better algorithm.
 - so we want to change our metrics here, say adding a weight to penalize porn images
 - think of machine learning as having two separate steps:
     - 1. figure out the metric
     - 2. worry about how to actually do well on the metric
-- other things happen, like our image classifier performs well on our data set, but users upload bad quality pictures which lower performance, so change metric and/or the dev set to better capture what we need our algorithm to actually do
+- other things happen, like our image classifier performs well on our data set, but users upload bad quality pictures which lower performance, so change metric and/or the dev set to better capture what we need our algorithm to actually do.
 
 ### Comparing to human-level performance
 
 #### Why human-level performance?
 
 - two main reasons we compare to human level performance:
-    - ML is getting better so its become feasible to compare to human level performance in many applications
-    - the workflow of designing and building ML systems is much more efficient when comparing to what humans also do
+    - ML is getting better so its become feasible to compare to human level performance in many applications.
+    - the workflow of designing and building ML systems is much more efficient when comparing to what humans also do.
 - for many problems, progress is rapid approaching human level performance, and slows down upon reaching it. the hope is that its reaching a theoretical limit, called the Bayes optimal error.
 - **Bayes optimal error** is the best possible error
     - for tasks humans are good at, there isn't much range b/w human error and the bayes optimal error.
@@ -108,9 +108,9 @@ There are lots of ways to improve a DL system, so its important to sse quick and
 | Training error | 8%           | 8%               |
 | Dev Error      | 10%          | 10%              |
 
-- the left example illustrates  bias - since humans are doing much better than the algo, we focus on improving training error
+- the left example illustrates bias - since humans are doing much better than the algo, we focus on improving training error.
 - the right example shows that we are close to human error - so we focus on reducing the variance
-- if we are doing better than Bayes error we're overfitting
+- if we are doing better than Bayes error we're overfitting.
 - having an estimate of the bayes optimal error helps us to focus on whether to reduce bias or variance.
     - avoidable bias: training error - human level error
     - variance: dev error - training error
@@ -136,7 +136,7 @@ There are lots of ways to improve a DL system, so its important to sse quick and
 #### Surpassing human-level performance
 
 - ml gets harder as we approach/surpass human level performance
-- when we've surpassed human level performance, are we overfitting, or is the bayes error lower than human error
+- when we've surpassed human level performance, are we overfitting, or is the bayes error lower than human error.
 - some applications have surpassed human level: online advertising, product recommendation, loan approval, logistics
     - all these examples are learning from structured data, not natural perception problems which humans are very good at
     - teams have access to heaps of data
@@ -176,7 +176,7 @@ There are lots of ways to improve a DL system, so its important to sse quick and
 - thinks the approach to do one thing at a time, like with current neural nets which recoginze images, or do speech etc, won't lead to AGI, we need a single kind of NN which learns all the tasks a human can do - see [his short story on how this might look](http://karpathy.github.io/2015/11/14/ai/).
 - people liked CS213N becuase it didn't abstract away things, it works through the low-level details. Implementing stuff is the best way to learn it.
 
-## Week 2: More ML Stratgey
+## Week 2: More ML Strategy
 
 ### Error Analysis
 
@@ -194,7 +194,7 @@ There are lots of ways to improve a DL system, so its important to sse quick and
 #### Cleaning up incorrectly labeled data
 
 - sometimes its worthwhile to check training sets for mislabelled images
-    - DL's are quite robust to random errors in the training set, so few mistakes are ok
+    - deep neural networks are quite robust to random errors in the training set, so few mistakes are ok
     - but systematic errors aren't ok, like labelling all white dogs as cats
 - modify our error spreadsheet above to have a mis-labelled category, we should always go after the biggest cause of error first
 - correcting dev/test set examples:
@@ -207,7 +207,6 @@ There are lots of ways to improve a DL system, so its important to sse quick and
 - there are many ways to make a speech recognition system more robust. More generally, for any ML project there are 50 different directions to improve a ml system
 - quickly set up a dev/test set and metric, build a initial system, then use Bias/Variance analysis and error analysis to prioritize next steps
 - a lot of value in the initial ML system is to help us prioritize future efforts. 
-
 
 ### Mismatched training and dev/test data
 
@@ -303,3 +302,9 @@ There are lots of ways to improve a DL system, so its important to sse quick and
     - code backprop yourself once to understand it
     - phd vsd industry: more freedom in academia for long term problems, but industry research is very exciting and well funded, impacts millions of users
 - exciting areas: unsupervised learning, deep reinforcement learning, NLP
+
+---
+
+course [done and dusted](https://www.coursera.org/account/accomplishments/certificate/QZESAQHSKF3K):
+
+![](img/deeplearningai-3-of-5-cert.png)
