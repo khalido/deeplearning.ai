@@ -1,6 +1,6 @@
 ---
 title: "deeplearning.ai: Structuring Machine Learning Projects"
-date: 2018-08-07
+date: 2018-08-14
 cover: /img/deeplearningai-3-of-5-cert.png
 tags:
 - courses
