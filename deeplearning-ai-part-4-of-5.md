@@ -9,6 +9,47 @@ tags:
 
 This is the [fourth course](https://www.coursera.org/learn/convolutional-neural-networks/home/welcome) in the deeplearning.ai courses and covers convulutional neural networks as applied to images.
 
+- [Week 1: Foundations of Convolutional Neural Networks](#week-1-foundations-of-convolutional-neural-networks)
+    - [Computer Vision](#computer-vision)
+    - [Edge detection example](#edge-detection-example)
+    - [Padding](#padding)
+    - [Strided convolution](#strided-convolution)
+    - [Convolutions over volumes](#convolutions-over-volumes)
+    - [One Layer of a Convolutional Network](#one-layer-of-a-convolutional-network)
+    - [A simple convolution network example](#a-simple-convolution-network-example)
+    - [Pooling layers](#pooling-layers)
+    - [Convolutional neural network example](#convolutional-neural-network-example)
+    - [Why convolutions?](#why-convolutions)
+    - [Yann LeCun interview](#yann-lecun-interview)
+- [Week 2: Deep convolutional models: case studies](#week-2-deep-convolutional-models-case-studies)
+    - [Why look at case studies?](#why-look-at-case-studies)
+    - [Classic Networks](#classic-networks)
+    - [ResNets](#resnets)
+    - [Networks in Networks and 1x1 Convolutions](#networks-in-networks-and-1x1-convolutions)
+    - [Inception Network Motivation](#inception-network-motivation)
+    - [Inception Network](#inception-network)
+    - [Practical advices for using ConvNets](#practical-advices-for-using-convnets)
+        - [Using Open-Source Implementation](#using-open-source-implementation)
+        - [Transfer Learning](#transfer-learning)
+        - [Data Augmentation](#data-augmentation)
+        - [State of Computer Vision](#state-of-computer-vision)
+- [Week 3: Object detection](#week-3-object-detection)
+    - [Object Localization](#object-localization)
+    - [Landmark Detection](#landmark-detection)
+    - [Object Detection](#object-detection)
+    - [Convolutional Implementation of Sliding Windows](#convolutional-implementation-of-sliding-windows)
+    - [Bounding Box Predictions](#bounding-box-predictions)
+    - [Intersection Over Union](#intersection-over-union)
+    - [Non-max Suppression](#non-max-suppression)
+    - [Anchor Boxes](#anchor-boxes)
+    - [YOLO Algorithm](#yolo-algorithm)
+    - [Region Proposals (R-CNN)](#region-proposals-r-cnn)
+- [Week 4: Special applications: Face recognition & Neural style transfer](#week-4-special-applications-face-recognition--neural-style-transfer)
+    - [Face Recognition](#face-recognition)
+        - [What is face recognition?](#what-is-face-recognition)
+    - [Neural Style Transfer](#neural-style-transfer)
+        - [](#)
+
 ## Week 1: Foundations of Convolutional Neural Networks
 
 > Learn to implement the foundational layers of CNNs (pooling, convolutions) and to stack them properly in a deep network to solve multi-class image classification problems.
@@ -143,7 +184,7 @@ model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(100, 100, 3)))
 - stumbled onto Chomsky's (language is innate) and Paigets (language is learned) debate b/w nature and nurture - got him interested in ai/neuroscience
 - #todo
 
-## Deep convolutional models: case studies
+## Week 2: Deep convolutional models: case studies
 
 > Learn about the practical tricks and methods used in deep CNNs straight from the research papers.
 
@@ -174,22 +215,185 @@ model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(100, 100, 3)))
 
 ### ResNets
 
+- deep networks suffer from vanishing and exploding gradients
+- resnet takes a output from a layer and passes it to a deeper layer, skipping the ones in b/w, allowing us to train a much deeper network
+
+![](img/resnet.png)
+
+- the pic above shows the skip connections, and that the perf of resnet increases with deeper networks
+
+Why ResNets work
 
 
+### Networks in Networks and 1x1 Convolutions
+
+- a 1x1 convolution shrinks the channels and applies a non-linerality. If we apply the same number of filters as channels then the output will have the same channels.
+- this shrinking helps save a lot of computation as we can shrink channels
+
+### Inception Network Motivation
+
+- when designing a CNN we have to make many choices, like picking a 3x3 or 5x5 Conv, or a max pooling layer, and so on.
+- Inception has the brilliant idea of using them all
+- downside is that it has huge computation costs, but we can use 1x1 conv layers to reduce computation cost
+
+![](img/inception.png)
 
 
+### Inception Network 
+ 
+- developed at Google, see this [article](https://towardsdatascience.com/a-simple-guide-to-the-versions-of-the-inception-network-7fc52b863202)
+- inception module:
 
+![](img/inception-module.png)
+
+- the inception network has many blocks of the inception module
+- there are different versions of inception, including one combined with resnet
 
 ### Practical advices for using ConvNets
+
+#### Using Open-Source Implementation
+
+- papers are difficult to replicate, so first look for an open source implementation in github
+- most will have pretrained weights available for transfer learning
+
+#### Transfer Learning
+
+- for computer vision its much faster to use pretrained weights for transfer learning, especially since many neural nets need weeks on multiple gpu's to train
+- for my own image recognition problem:
+    - download a good NN with weigths
+    - remove the softmax activation layer and put my own
+    - now train the network keeping all the layers frozen except the last one
+- if we have a larger data set, we can freeze fewer layers, and train more layers on top 
+- another option is to remove the softmax layer, then run the images through the NN and save the output - this is like converting images to a vector representation
+- if we have enough data, we can fine tune all the layers in the network 
+
+#### Data Augmentation
+
+- more data equals better deep learning performance
+- data augmentation is a easy way to get more image data by changing images in minor ways like mirroring, random cropping, rotation, shearing, local warping, color shifting
+- there are many ways to data augment, look at successful open source implementations, like [keras.preprocessing.image.ImageDataGenerator](https://keras.io/preprocessing/image/)
+- a common way to implement data augmentation is to have a cpu thread loading/augmenting images and a gpu thread training
+
+#### State of Computer Vision
+
+- computer vision is unique in deep learning
+- most machine learning problems fall on a spectrum of little to lots of data
+    - small data - we need to hand engineer features, more hacks
+    - big data - simple algorithims, less hand engineering
+- two sources of knowledge
+    - labeled data
+    - hand engineered features, network architecture, other components
+- there is lots of image data, but its still not enough for complex problems like object detection, so there is lots of hand engineering
+- since object detection has limited data, we need complex NNs
+- tips for doing well on benchmarks/competions
+    - ensembling - train several NNs independently and average their outputs 
+        - usually 3-15 networks, improves 1-2%, not worthwhile in production as expensive
+    - multi-crop at test time - run classifier on multiple versions of test images and average results
+        - again, slows down runtime, Andrew personally doesn't use this in production
+    - start with existing open source architectures and weights, fine tune on your dataset
+
 
 ## Week 3: Object detection
 
 > Learn how to apply your knowledge of CNNs to one of the toughest but hottest field of computer vision: Object detection.
 
+### Object Localization
 
+- image classification is looking at a picture and telling us whats in it, like a car
+- localization is telling us where the car is in the picture
+- we also have multiple objects in a picture
+- we change the NN so it outputs a bounding box: bx, by, bh, bw, where (bx, by) is the location of the midpoint of the object, and bh, bw is the height and width
+    - the upper left of the image is typically (0,0) and the lower right is (1,1)
+- so the training box now contains the class label and these four numbers
+- target label y is now a vector: `Pc` (probability there is an object), than `bx by bw bh` then the classes `c1 c2 c3`
+- when there is no detected object, `Pc` is zero, and we don't care about the other numbers
+- we use logistic regression for `Pc`, log likely hood loss for classes, and squared error for the bounding box.
+
+### Landmark Detection
+
+- sometimes we want landmarks, like the location of eyes on a face, nose etc
+- so we can define landmarks in our training set, so the output y predicts the location of the landmarks we care about
+- this is the basis of things like snapchats face augmented reality filters etc
+- its a simple idea, adding a bunch of output units for the things we care about
+
+### Object Detection
+
+- we train a covnet on closely cropped images of a car - meaning that the image is mainly the car, and it predicts car or not
+- then we use this covnet in a sliding windows detection
+- sliding windows technique:
+    - we slide a window over the image, and feed it to the covnet asking it car or not (we slide the window across the entire image, passing lots of cropped images to the covnet)
+    - we now repeat this, using a larger window (and maybe repeat with bigger windows) - the idea there is that if there is a car it will end up in a window
+    - store all the windows with a car detected (for overlapping windows, choose the one with better confidence)
+- this is infeasible as there is a huge computational cost of sliding windows as we crop heaps of images and run each through a covnet. So we look at a convolutional approach
+
+### Convolutional Implementation of Sliding Windows
+
+- we can turn the FC layer into convolutional layers
+
+![](img/fc-into-conv.png)
+
+**Convolution implementation of sliding windows:**
+
+- we make all the predictions at the same time instead of one by one
+- weakness - the position of the bounding boxes isn't that accurate
+
+### Bounding Box Predictions
+
+- a better algorithim is YOLO - You only look once, from 2015.
+- basic idea is that we divide an image with a grid.
+    - for a 100x100 image, a 19x19 grid and apply our covnet to each grid cell
+- for training labels, each grid cell has a label y as above
+- the covnet is applied to each grid position, and returns a image bounding box relative to that box
+
+![](img/yolo.png)
+
+- problem if there is more than one image in a grid cell
+- YOLO is hard to understand, so see some simple explanations, like [this guide](https://hackernoon.com/gentle-guide-on-how-yolo-object-localization-works-with-keras-part-1-aec99277f56f)
+
+### Intersection Over Union
+
+- how do we tell if our object detection is working well?
+- the intersectoin over union computers the intesection b/w the predicted bounding box and the actual, and computes `IOU = intersection area / Union area` IOU>0.5 is good, higher the better
+
+### Non-max Suppression
+
+- we can detect the same object multiple times as the object can overlap into multiple grid cells=
+- so we look at the probabilities of each of the detection, 
+- first, discard all boxes with `Pc <= 0.6`
+- now take the box with the highest `Pc`, and suppresses the other predictions with a IOU>=0.5 overlap with this one
+- so we should be left with only final predictions - this gives us pretty good results
+
+### Anchor Boxes
+
+- detecting objects in a grid cell is a problem - YOLO only detects one object per grid cell
+- anchor boxes pre-define the shape of objects
+    - before: each object in a training image was assigned to a grid cell which contained that objects midpoint
+    - now: each object in a training image is assigned to grid cell that contains the objects midpoint and anchor box for the grid cell with highest IOU.
+- choose anchor boxes by hand to cover the variety of shapes we find in our images - or use a KNN algo to choose shapes
+
+![](img/anchor-box.png) 
+
+### YOLO Algorithm
+
+- YOLO is state of the art and pretty accurate
+- see [this pretrained model](https://pjreddie.com/darknet/yolo/)
+
+### Region Proposals (R-CNN)
+
+- optional, used less often
+- the sliding windows techniques tries to classify a lot of regions in a grid which have no objects
+- R-CNN runs a segmentation algo which finds areas of interest and runs a classifier on them
+- R-CNN is quite slow, there are improvements like FAST R-CNN but its still slow, so there is a FASTER R-CNN algo too, but its still slower than YOLO
+- so this is an interesting idea but
 
 ## Week 4: Special applications: Face recognition & Neural style transfer
 
 ### Face Recognition
 
+#### What is face recognition?
+
+
+
 ### Neural Style Transfer
+
+#### 
